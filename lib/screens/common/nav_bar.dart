@@ -1,6 +1,9 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:inventory/screens/category/view_category.dart';
+import 'package:inventory/screens/department/view_departments.dart';
+import 'package:inventory/screens/login/login_screen.dart';
+import 'package:inventory/screens/products/view_products.dart';
 import 'package:inventory/utils/token_utils.dart';
 
 class CustomNavigationBar extends StatefulWidget {
@@ -42,12 +45,11 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
       ];
 
   List<Widget> get _pages => [
-        const Center(child: Text('Products Page')),
+        ViewProducts(),
         ViewCategory(),
-        const Center(child: Text('Departments Page')),
+        const ViewAllDepartments(),
         isExpired
-            ? const Center(
-                child: Text('Login Page')) // Replace with Login widget
+            ? LoginScreen() // Replace with Login widget
             : const Center(child: Text('Issue Items Page')),
       ];
 
@@ -62,6 +64,7 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
           },
         ),
       ),
+      // appBar: AppBar( actions: [Text("hi")]),
       body: _pages[_currentIndex],
       floatingActionButton: FloatingActionButton(
         shape: RoundedRectangleBorder(
