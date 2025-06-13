@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:inventory/services/auth_service.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -11,7 +12,11 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  void _handleLogin() {
+  void _handleLogin() async {
+    AuthService auth = AuthService();
+    print("Clicked");
+    var bool = await auth.login(emailController.text, passwordController.text);
+    bool ? print("Bool") : print("No bool");
     // Navigator.push(
     //   context,
     //   MaterialPageRoute(
