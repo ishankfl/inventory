@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:inventory/login_screen.dart';
+import 'package:inventory/screens/login/add_staff_screen.dart';
+// import 'package:inventory/screens/login/login_screen.dart';
+import 'dart:io';
+
+import 'package:inventory/utils/http_overide.dart';
 
 void main() {
+  HttpOverrides.global = MyHttpOverrides();
+
   runApp(const MyApp());
 }
 
@@ -19,7 +25,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       debugShowCheckedModeBanner: false,
-      home: const LoginScreen(),
+      home: const AddStaffScreen(),
     );
   }
 }
