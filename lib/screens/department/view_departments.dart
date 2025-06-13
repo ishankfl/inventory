@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:inventory/models/department.dart';
+import 'package:inventory/screens/department/add_department.dart';
 import 'package:inventory/services/department_service.dart';
+import 'package:inventory/utils/token_utils.dart';
 
 class ViewAllDepartments extends StatefulWidget {
   const ViewAllDepartments({Key? key}) : super(key: key);
@@ -76,6 +78,13 @@ class _ViewAllDepartmentsState extends State<ViewAllDepartments>
   }
 
   void onDelete(String id) async {
+    bool isExpired = await TokenUtils.isExpiredToken();
+    if (isExpired) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Please Login First with admin account")),
+      );
+      return;
+    }
     final department = departments?.firstWhere((d) => d.id == id);
 
     final confirmed = await showDialog<bool>(
@@ -157,7 +166,18 @@ class _ViewAllDepartmentsState extends State<ViewAllDepartments>
     );
   }
 
-  void onAdd() {
+  void onAdd() async {
+    bool isExpired = await TokenUtils.isExpiredToken();
+    if (isExpired) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Please Login First with admin account")),
+      );
+      return;
+    }
+    Navigator.push(context, MaterialPageRoute(builder: (builder) {
+      return AddDepartmentPage();
+    }));
+    return;
     // TODO: Navigate to add page
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Add Department - Not implemented yet')),
@@ -167,14 +187,31 @@ class _ViewAllDepartmentsState extends State<ViewAllDepartments>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[50],
+      // backgroundColor: Colors.grey[50],
       appBar: AppBar(
+        leading: Row(
+          children: [
+            IconButton(
+              icon: Icon(
+                Icons.menu,
+                color: Colors.white,
+              ), // Default drawer icon
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+            ),
+          ],
+        ),
         title: const Text(
-          'Departments',
+          "Departments",
           style: TextStyle(fontWeight: FontWeight.w600),
         ),
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black87,
+        // title: const Text(
+        //   '',
+        //   style: TextStyle(fontWeight: FontWeight.w600),
+        // ),
+        // backgroundColor: Colors.white,
+        // foregroundColor: Colors.black87,
         elevation: 0,
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1),
@@ -201,7 +238,7 @@ class _ViewAllDepartmentsState extends State<ViewAllDepartments>
         children: [
           // Search Bar
           Container(
-            color: Colors.white,
+            // color: Colors.white,
             padding: const EdgeInsets.all(16.0),
             child: TextField(
               controller: _searchController,
@@ -432,33 +469,33 @@ class _ViewAllDepartmentsState extends State<ViewAllDepartments>
               ],
 
               // Department ID
-              Row(
-                children: [
-                  Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                    decoration: BoxDecoration(
-                      color: Colors.purple.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(Icons.tag, size: 14, color: Colors.purple[600]),
-                        const SizedBox(width: 4),
-                        Text(
-                          'ID: ${department.id}',
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.purple[600],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+              // Row(
+              //   children: [
+              //     Container(
+              //       padding:
+              //           const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              //       decoration: BoxDecoration(
+              //         color: Colors.purple.withOpacity(0.1),
+              //         borderRadius: BorderRadius.circular(20),
+              //       ),
+              //       // child: Row(
+              //       //   mainAxisSize: MainAxisSize.min,
+              //       //   children: [
+              //       //     // Icon(Icons.tag, size: 14, color: Colors.purple[600]),
+              //       //     // const SizedBox(width: 4),
+              //       //     // Text(
+              //       //     //   'ID: ${department.id}',
+              //       //     //   style: TextStyle(
+              //       //     //     fontSize: 12,
+              //       //     //     fontWeight: FontWeight.w500,
+              //       //     //     color: Colors.purple[600],
+              //       //     //   ),
+              //       //     // ),
+              //       //   ],
+              //       // ),
+              //     ),
+              //   ],
+              // ),
 
               const SizedBox(height: 20),
 

@@ -2,19 +2,18 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:inventory/constants/server.dart';
-import 'package:inventory/models/categoy.dart';
+import 'package:inventory/models/category.dart';
 import 'package:inventory/utils/token_utils.dart';
-import 'package:inventory/models/categoy.dart';
 
 class CategoiresService {
-  /// Adds a new Categoires
+  /// Adds a new Category
   static Future<Map<String, dynamic>> addCategoires({
     required String name,
     required String description,
-    required int userId,
+    required String userId,
   }) async {
     final token = await TokenUtils.getToken();
-    final url = Uri.parse('$baseUrl/api/Categoires');
+    final url = Uri.parse('$baseUrl/Category');
 
     try {
       final response = await http
@@ -33,15 +32,17 @@ class CategoiresService {
           .timeout(const Duration(seconds: 10));
 
       final resBody = jsonDecode(response.body);
-      if (response.statusCode == 201) {
-        return {'success': true, 'message': 'Categoires added successfully.'};
+      print(response.statusCode);
+      if (response.statusCode == 200) {
+        return {'success': true, 'message': 'Category added successfully.'};
       } else {
         return {
           'success': false,
-          'message': resBody['message'] ?? 'Failed to add Categoires.'
+          'message': resBody['message'] ?? 'Failed to add Category.'
         };
       }
     } catch (e) {
+      print(e);
       return {
         'success': false,
         'message': 'Something went wrong. Please try again later.'
@@ -53,7 +54,7 @@ class CategoiresService {
   static Future<List<Categoires>?> getAllCategories() async {
     final token = await TokenUtils.getToken();
     final url = Uri.parse('$baseUrl/Category');
-    print('$baseUrl/api/Categoires');
+    print('$baseUrl/api/Category');
 
     try {
       final response = await http.get(
@@ -83,10 +84,10 @@ class CategoiresService {
     return parsed.map<Categoires>((json) => Categoires.fromJson(json)).toList();
   }
 
-  /// Deletes a Categoires by ID
+  /// Deletes a Category by ID
   static Future<bool> deleteCategoires(int id) async {
     final token = await TokenUtils.getToken();
-    final url = Uri.parse('$baseUrl/api/Categoires/$id');
+    final url = Uri.parse('$baseUrl/api/Category/$id');
 
     try {
       final response = await http.delete(
@@ -98,15 +99,15 @@ class CategoiresService {
 
       return response.statusCode == 200 || response.statusCode == 204;
     } catch (e) {
-      print('Delete Categoires error: $e');
+      print('Delete Category error: $e');
       return false;
     }
   }
 
-  /// Gets a Categoires by ID
+  /// Gets a Category by ID
   static Future<Map<String, dynamic>?> getCategoiresById(int id) async {
     final token = await TokenUtils.getToken();
-    final url = Uri.parse('$baseUrl/api/Categoires/$id');
+    final url = Uri.parse('$baseUrl/api/Category/$id');
 
     try {
       final response = await http.get(
@@ -123,19 +124,19 @@ class CategoiresService {
         return null;
       }
     } catch (e) {
-      print('Get Categoires by ID error: $e');
+      print('Get Category by ID error: $e');
       return null;
     }
   }
 
-  /// Updates a Categoires by ID
+  /// Updates a Category by ID
   static Future<Map<String, dynamic>> updateCategoires({
     required int id,
     required String name,
     required String description,
   }) async {
     final token = await TokenUtils.getToken();
-    final url = Uri.parse('$baseUrl/api/Categoires/$id');
+    final url = Uri.parse('$baseUrl/api/Category/$id');
 
     try {
       final response = await http.put(
@@ -152,15 +153,15 @@ class CategoiresService {
 
       final resBody = jsonDecode(response.body);
       if (response.statusCode == 200) {
-        return {'success': true, 'message': 'Categoires updated successfully.'};
+        return {'success': true, 'message': 'Category updated successfully.'};
       } else {
         return {
           'success': false,
-          'message': resBody['message'] ?? 'Failed to update Categoires.'
+          'message': resBody['message'] ?? 'Failed to update Category.'
         };
       }
     } catch (e) {
-      print('Update Categoires error: $e');
+      print('Update Category error: $e');
       return {
         'success': false,
         'message': 'Something went wrong. Please try again later.'

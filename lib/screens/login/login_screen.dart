@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:inventory/screens/common/nav_bar.dart';
 import 'package:inventory/screens/dashboard/home_page.dart';
 import 'package:inventory/services/auth_service.dart';
 
@@ -17,14 +18,21 @@ class _LoginScreenState extends State<LoginScreen> {
     AuthService auth = AuthService();
     print("Clicked");
     var bool = await auth.login(emailController.text, passwordController.text);
+    if (bool) {
+      setState(() {
+        Navigator.push(context, MaterialPageRoute(builder: (builder) {
+          return const CustomNavigationBar();
+        }));
+      });
+    }
     bool ? print("Bool") : print("No bool");
 
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => HomePage(),
-      ),
-    );
+    // Navigator.push(
+    //   context,
+    //   MaterialPageRoute(
+    //     builder: (_) => HomePage(),
+    //   ),
+    // );
   }
 
   @override

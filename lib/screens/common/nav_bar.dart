@@ -1,5 +1,6 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:inventory/main.dart';
 import 'package:inventory/screens/category/view_category.dart';
 import 'package:inventory/screens/department/view_departments.dart';
 import 'package:inventory/screens/login/login_screen.dart';
@@ -49,29 +50,77 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
         ViewCategory(),
         const ViewAllDepartments(),
         isExpired
-            ? LoginScreen() // Replace with Login widget
+            ? LoginScreen()
             : const Center(child: Text('Issue Items Page')),
       ];
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
+
     return Scaffold(
       drawer: Drawer(
-        child: ElevatedButton(
-          child: Text("Logout"),
-          onPressed: () {
-            TokenUtils.clearToken();
-          },
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            UserAccountsDrawerHeader(
+              accountName: const Text('Ishan Kafle'),
+              accountEmail: const Text('ishan@example.com'),
+              currentAccountPicture: const CircleAvatar(
+                child: Icon(Icons.person, size: 40),
+              ),
+              decoration: BoxDecoration(
+                color: theme.primaryColor,
+              ),
+            ),
+            ListTile(
+              leading: Icon(Icons.person, color: theme.colorScheme.onSurface),
+              title: Text('Profile',
+                  style: TextStyle(color: theme.colorScheme.onSurface)),
+              onTap: () {},
+            ),
+            ListTile(
+              leading: Icon(Icons.settings, color: theme.colorScheme.onSurface),
+              title: Text('Settings',
+                  style: TextStyle(color: theme.colorScheme.onSurface)),
+              onTap: () {},
+            ),
+            SwitchListTile(
+              title: Text('Dark Theme',
+                  style: TextStyle(color: theme.colorScheme.onSurface)),
+              secondary:
+                  Icon(Icons.dark_mode, color: theme.colorScheme.onSurface),
+              value: themeNotifier.value == ThemeMode.dark,
+              onChanged: (bool value) {
+                themeNotifier.value = value ? ThemeMode.dark : ThemeMode.light;
+              },
+            ),
+            Divider(color: theme.dividerColor),
+            ListTile(
+              leading: Icon(Icons.logout, color: theme.colorScheme.onSurface),
+              title: Text('Logout',
+                  style: TextStyle(color: theme.colorScheme.onSurface)),
+              onTap: () {
+                TokenUtils.clearToken();
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (_) => LoginScreen()),
+                );
+              },
+            ),
+          ],
         ),
       ),
-      // appBar: AppBar( actions: [Text("hi")]),
       body: _pages[_currentIndex],
       floatingActionButton: FloatingActionButton(
+        backgroundColor: theme.primaryColor,
+        foregroundColor: theme.colorScheme.onPrimary,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30),
         ),
         onPressed: () {
-          // You can handle FAB press based on current index or globally
+          // Handle FAB press
         },
         child: const Icon(Icons.add),
       ),
@@ -79,21 +128,20 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
       bottomNavigationBar: AnimatedBottomNavigationBar.builder(
         itemCount: _iconList.length,
         tabBuilder: (int index, bool isActive) {
-          final color = isActive ? Colors.deepPurple : Colors.grey;
+          final color = isActive
+              ? Color.fromARGB(255, 255, 255, 255)
+              : Color.fromARGB(255, 199, 230, 243);
           return Column(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(_iconList[index], color: color),
               const SizedBox(height: 4),
-              Text(
-                _labels[index],
-                style: TextStyle(color: color),
-              ),
+              Text(_labels[index], style: TextStyle(color: color)),
             ],
           );
         },
-        backgroundColor: Colors.white,
+        backgroundColor: isDarkMode ? theme.cardColor : theme.primaryColor,
         activeIndex: _currentIndex,
         gapLocation: GapLocation.center,
         notchSmoothness: NotchSmoothness.verySmoothEdge,

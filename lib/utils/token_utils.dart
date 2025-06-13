@@ -1,7 +1,7 @@
 /// TOken utils.dart
-import 'dart:ffi';
 
-import 'package:flutter/material.dart';
+// ignore_for_file: avoid_print
+
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 
@@ -30,5 +30,13 @@ class TokenUtils {
       return isExpired;
     }
     return true;
+  }
+
+  static Future<String> getUserId() async {
+    final token = await getToken();
+    print(token);
+    final decoded = JwtDecoder.decode(token.toString());
+    print(decoded);
+    return decoded['id'];
   }
 }

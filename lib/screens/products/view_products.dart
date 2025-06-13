@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:inventory/models/product.dart';
+import 'package:inventory/screens/products/add_products.dart';
 import 'package:inventory/services/product_services.dart';
+import 'package:inventory/utils/token_utils.dart';
 
 class ViewProducts extends StatefulWidget {
   ViewProducts({super.key});
@@ -28,7 +30,6 @@ class _ViewProductsState extends State<ViewProducts>
     fetchProducts();
   }
 
-
   Future<void> fetchProducts() async {
     setState(() {
       isLoading = true;
@@ -47,6 +48,7 @@ class _ViewProductsState extends State<ViewProducts>
         isLoading = false;
       });
       // Handle error
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to load products: $e')),
       );
@@ -89,7 +91,14 @@ class _ViewProductsState extends State<ViewProducts>
     );
   }
 
-  void _deleteProduct(Product product) {
+  void _deleteProduct(Product product) async {
+    bool isExpired = await TokenUtils.isExpiredToken();
+    if (isExpired) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Please Login First with admin account")),
+      );
+      return;
+    }
     // TODO: Implement actual delete functionality
     setState(() {
       products.removeWhere((p) => p.id == product.id);
@@ -124,14 +133,28 @@ class _ViewProductsState extends State<ViewProducts>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[50],
+      // backgroundColor: Colors.grey[50],
       appBar: AppBar(
+        leading: Row(
+          children: [
+            IconButton(
+              icon: Icon(
+                Icons.menu,
+                color: Colors.white,
+              ), // Default drawer icon
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+            ),
+          ],
+        ),
         title: const Text(
           "Products",
           style: TextStyle(fontWeight: FontWeight.w600),
         ),
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black87,
+
+        // backgroundColor: Colors.white,
+        // foregroundColor: Colors.black87,
         elevation: 0,
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1),
@@ -148,7 +171,18 @@ class _ViewProductsState extends State<ViewProducts>
           ),
           IconButton(
             icon: const Icon(Icons.add_circle_outline),
-            onPressed: () {
+            onPressed: () async {
+              bool isExpired = await TokenUtils.isExpiredToken();
+              if (isExpired) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                      content: Text("Please Login First with admin account")),
+                );
+                return;
+              }
+              Navigator.push(context, MaterialPageRoute(builder: (builder) {
+                return AddProductPage();
+              }));
               // TODO: Navigate to Add Product Page
             },
             tooltip: "Add New Product",
@@ -160,7 +194,7 @@ class _ViewProductsState extends State<ViewProducts>
         children: [
           // Search Bar
           Container(
-            color: Colors.white,
+            // color: Colors.white,
             padding: const EdgeInsets.all(16.0),
             child: TextField(
               controller: _searchController,
@@ -360,13 +394,17 @@ class _ViewProductsState extends State<ViewProducts>
 
               // Details Row
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   _buildDetailChip(
                     icon: Icons.inventory,
                     label: 'Qty: ${product.quantity}',
                     color: Colors.blue,
                   ),
-                 
+                  _buildDetailChip(
+                      icon: Icons.type_specimen,
+                      label: 'Category  ' + "${product.category.name}",
+                      color: Colors.blue)
                 ],
               ),
 

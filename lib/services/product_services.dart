@@ -83,6 +83,7 @@ class ProductService {
       final response = await http.get(url);
       if (response.statusCode == 200) {
         final List<dynamic> jsonData = jsonDecode(response.body);
+        print(response.body);
         return jsonData.map((json) => Product.fromJson(json)).toList();
       } else {
         print('Failed to load products: ${response.body}');

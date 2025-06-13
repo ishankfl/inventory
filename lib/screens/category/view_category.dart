@@ -1,9 +1,13 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
-import 'package:inventory/models/categoy.dart';
+import 'package:inventory/models/category.dart';
+import 'package:inventory/screens/category/add_category.dart';
 import 'package:inventory/services/category_services.dart';
+import 'package:inventory/utils/token_utils.dart';
 
 class ViewCategory extends StatefulWidget {
-  ViewCategory({super.key});
+  const ViewCategory({super.key});
 
   @override
   State<ViewCategory> createState() => _ViewCategoryState();
@@ -31,12 +35,39 @@ class _ViewCategoryState extends State<ViewCategory> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("View Categories"),
+        leading: Row(
+          children: [
+            IconButton(
+              icon: Icon(
+                Icons.menu,
+                color: Colors.white,
+              ), // Default drawer icon
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+            ),
+          ],
+        ),
+        title: const Text(
+          "Categories",
+          style: TextStyle(fontWeight: FontWeight.w600),
+        ),
+        // title: const Text(" "),
         actions: [
           IconButton(
             icon: const Icon(Icons.add),
-            onPressed: () {
-              // TODO: Navigate to Add Category Page
+            onPressed: () async {
+              bool isExpired = await TokenUtils.isExpiredToken();
+              if (isExpired) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                      content: Text("Please Login First with admin account")),
+                );
+                return;
+              }
+              Navigator.push(context, MaterialPageRoute(builder: (builder) {
+                return const AddCategoryPage();
+              }));
             },
             tooltip: "Add New Category",
           )
