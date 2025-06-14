@@ -32,4 +32,9 @@ class Categoires {
         'userId': userId,
         'user': user.toJson(),
       };
+
+  factory Categoires.empty() {
+    return Categoires(
+        user: User.empty(), id: '', name: '', description: '', userId: '');
+  }
 }

@@ -39,6 +39,7 @@ dependencies:
   shared_preferences: ^2.2.3
   animated_bottom_navigation_bar: ^1.4.0
   jwt_decoder: ^2.0.1
+  get: ^4.6.6
 
 dev_dependencies:
   flutter_test:

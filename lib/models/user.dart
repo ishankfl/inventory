@@ -22,4 +22,16 @@ class User {
         'fullName': fullName,
         'email': email,
       };
+
+  factory User.empty() {
+    return User(
+      id: '',
+      fullName: '',
+      email: '',
+      // passwordHash: '',
+      // passwordSalt: '',
+      // role: 0,
+      // createdAt: DateTime.now(),
+    );
+  }
 }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:inventory/models/department.dart';
+import 'package:inventory/models/product_issue.dart';
 import 'package:inventory/services/department_service.dart';
+import 'package:inventory/services/issue_service.dart';
 
 class DepartmentDrawer extends StatefulWidget {
   final Function(Department) onDepartmentSelected;
@@ -21,6 +23,7 @@ class _DepartmentDrawerState extends State<DepartmentDrawer> {
   bool isLoading = true;
   String? error;
   Department? selectedDepartment;
+  ProductIssue? latestIssue;
 
   @override
   void initState() {
@@ -44,6 +47,9 @@ class _DepartmentDrawerState extends State<DepartmentDrawer> {
           );
           isLoading = false;
         });
+
+        // Fetch initial issue data
+        fetchProductIssueForDepartment(selectedDepartment!.id);
       } else {
         setState(() {
           error = 'No departments available.';
@@ -58,13 +64,36 @@ class _DepartmentDrawerState extends State<DepartmentDrawer> {
     }
   }
 
+  Future<void> fetchProductIssueForDepartment(String id) async {
+    final result =
+        await IssueService.fetchLatestIssueByDepartmentId(departmentId: id);
+
+    if (result is ProductIssue) {
+      setState(() {
+        latestIssue = result;
+      });
+    } else {
+      setState(() {
+        latestIssue = null;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(result['message'] ?? 'Failed to fetch data')),
+      );
+    }
+  }
+
+  removeItemFromIssue(String issueId, String productId) async {
+    final remove = await IssueService.removeItemFromIssue(issueId, productId);
+    print(remove);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
       child: SafeArea(
         child: Column(
           children: [
-            const DrawerHeader(
+            Container(
               decoration: BoxDecoration(color: Color(0xFF007bff)),
               child: Center(
                 child: Text(
@@ -79,7 +108,7 @@ class _DepartmentDrawerState extends State<DepartmentDrawer> {
             ),
             if (isLoading)
               const Padding(
-                padding: EdgeInsets.all(24),
+                padding: EdgeInsets.all(5),
                 child: Center(child: CircularProgressIndicator()),
               )
             else if (error != null)
@@ -112,10 +141,59 @@ class _DepartmentDrawerState extends State<DepartmentDrawer> {
                       setState(() {
                         selectedDepartment = department;
                       });
+                      fetchProductIssueForDepartment(department.id);
                       widget.onDepartmentSelected(department);
-                      // Navigator.pop(context); // Close drawer
                     }
                   },
+                ),
+              ),
+            if (latestIssue != null)
+              Expanded(
+                child: ListView.builder(
+                  itemCount: latestIssue!.issueItems.length,
+                  itemBuilder: (context, index) {
+                    final item = latestIssue!.issueItems[index];
+                    final product = item.product;
+                    return Card(
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 8),
+                      child: ListTile(
+                        title: Text(product!.name),
+                        subtitle: Text(
+                          'Quantity: ${product!.quantity} • Price: Rs. ${product.price.toStringAsFixed(2)}',
+                        ),
+                        trailing: IconButton(
+                          icon: const Icon(Icons.close, color: Colors.red),
+                          onPressed: () {
+                            setState(() {
+                              removeItemFromIssue(latestIssue!.id, product.id);
+                              latestIssue!.issueItems.removeAt(index);
+                            });
+                          },
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            if (latestIssue != null)
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Divider(),
+                    Text(
+                      'Total Products: ${latestIssue!.issueItems.length}',
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      'Total Quantity: ${latestIssue!.issueItems.fold<int>(0, (sum, item) => sum + item.product!.quantity)}',
+                    ),
+                    Text(
+                      'Total Price: Rs. ${latestIssue!.issueItems.fold<double>(0, (sum, item) => sum + (item.product!.price * item.product!.quantity)).toStringAsFixed(2)}',
+                    ),
+                  ],
                 ),
               ),
           ],

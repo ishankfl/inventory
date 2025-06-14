@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:inventory/models/product.dart';
 import 'package:inventory/screens/issues/department_drawer.dart';
+import 'package:inventory/services/issue_service.dart';
 import 'package:inventory/services/product_services.dart';
 import 'package:inventory/utils/token_utils.dart';
 
@@ -82,6 +83,16 @@ class _CreateProductIssueState extends State<CreateProductIssue> {
       isChecking[product.id] = true;
       isAvailable[product.id] = null;
     });
+
+    final service = IssueService.addNewItem(
+        departmentId: departmentId.toString(),
+        productId: product.id,
+        quantityIssued: int.parse(qtyStr));
+
+    print(service);
+    // print("Service... : " + service);
+    // final response = service.
+    // IssueService
 
     await Future.delayed(
         const Duration(milliseconds: 700)); // Simulate API call
