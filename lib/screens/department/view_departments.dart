@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:inventory/models/department.dart';
 import 'package:inventory/screens/department/add_department.dart';

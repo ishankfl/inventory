@@ -115,15 +115,22 @@ class ProductService {
   }
 
   /// Delete a product by its ID
-  static Future<http.Response> deleteProduct(String id) async {
+  static Future<bool> deleteProduct(String id) async {
     final token = await _getToken();
     final url = Uri.parse('$baseUrl/Product/$id');
-
-    return await http.delete(
-      url,
-      headers: {
-        'Authorization': 'Bearer $token',
-      },
-    );
+    print(url);
+    try {
+      final response = await http.delete(
+        url,
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      );
+      print(response.statusCode);
+      return true;
+    } catch (e) {
+      print('$e');
+      return false;
+    }
   }
 }

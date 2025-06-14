@@ -1,6 +1,9 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:inventory/models/product.dart';
 import 'package:inventory/screens/products/add_products.dart';
+import 'package:inventory/screens/products/edit_product.dart';
 import 'package:inventory/services/product_services.dart';
 import 'package:inventory/utils/token_utils.dart';
 
@@ -99,23 +102,39 @@ class _ViewProductsState extends State<ViewProducts>
       );
       return;
     }
-    // TODO: Implement actual delete functionality
-    setState(() {
-      products.removeWhere((p) => p.id == product.id);
-      filteredProducts.removeWhere((p) => p.id == product.id);
-    });
+    final delete = await ProductService.deleteProduct(product.id);
+    if (delete) {
+      setState(() {
+        products.removeWhere((p) => p.id == product.id);
+        filteredProducts.removeWhere((p) => p.id == product.id);
+      });
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('${product.name} deleted successfully'),
-        action: SnackBarAction(
-          label: 'Undo',
-          onPressed: () {
-            // TODO: Implement undo functionality
-          },
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('${product.name} deleted successfully'),
+          action: SnackBarAction(
+            label: 'Undo',
+            onPressed: () {
+              // TODO: Implement undo functionality
+            },
+          ),
         ),
-      ),
-    );
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to delete this product'),
+          action: SnackBarAction(
+            label: 'Undo',
+            onPressed: () {
+              // TODO: Implement undo functionality
+            },
+          ),
+        ),
+      );
+    }
+
+    ;
   }
 
   Color _getStockStatusColor(int quantity) {
@@ -138,7 +157,7 @@ class _ViewProductsState extends State<ViewProducts>
         leading: Row(
           children: [
             IconButton(
-              icon: Icon(
+              icon: const Icon(
                 Icons.menu,
                 color: Colors.white,
               ), // Default drawer icon
@@ -152,9 +171,6 @@ class _ViewProductsState extends State<ViewProducts>
           "Products",
           style: TextStyle(fontWeight: FontWeight.w600),
         ),
-
-        // backgroundColor: Colors.white,
-        // foregroundColor: Colors.black87,
         elevation: 0,
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1),
@@ -181,9 +197,8 @@ class _ViewProductsState extends State<ViewProducts>
                 return;
               }
               Navigator.push(context, MaterialPageRoute(builder: (builder) {
-                return AddProductPage();
+                return const AddProductPage();
               }));
-              // TODO: Navigate to Add Product Page
             },
             tooltip: "Add New Product",
           ),
@@ -416,7 +431,12 @@ class _ViewProductsState extends State<ViewProducts>
                 children: [
                   OutlinedButton.icon(
                     onPressed: () {
-                      // TODO: Navigate to edit product screen
+                      // TODO: Navigate
+                      //to edit product screen
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (builder) {
+                        return EditProductPage(product: product);
+                      }));
                     },
                     icon: const Icon(Icons.edit, size: 16),
                     label: const Text('Edit'),

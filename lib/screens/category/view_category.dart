@@ -14,7 +14,10 @@ class ViewCategory extends StatefulWidget {
 }
 
 class _ViewCategoryState extends State<ViewCategory> {
-  List<Categoires>? categoires = [];
+  List<Categoires>? categoires; // Full list
+  List<Categoires>? filteredProducts; // Filtered list for search
+  final TextEditingController _searchController = TextEditingController();
+  String searchQuery = "";
 
   @override
   void initState() {
@@ -27,32 +30,46 @@ class _ViewCategoryState extends State<ViewCategory> {
     if (data != null) {
       setState(() {
         categoires = data;
+        filteredProducts = data; // Show all on load
       });
-    } // print(categories);
+    }
+  }
+
+  void _filterCategory(String query) {
+    setState(() {
+      searchQuery = query;
+      if (query.isEmpty) {
+        filteredProducts = categoires;
+      } else {
+        filteredProducts = categoires
+            ?.where((category) =>
+                category.name.toLowerCase().contains(query.toLowerCase()) ||
+                category.description
+                    .toLowerCase()
+                    .contains(query.toLowerCase()))
+            .toList();
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    final isLoading = categoires == null;
+    final isEmpty =
+        !isLoading && (filteredProducts == null || filteredProducts!.isEmpty);
+
     return Scaffold(
       appBar: AppBar(
-        leading: Row(
-          children: [
-            IconButton(
-              icon: Icon(
-                Icons.menu,
-                color: Colors.white,
-              ), // Default drawer icon
-              onPressed: () {
-                Scaffold.of(context).openDrawer();
-              },
-            ),
-          ],
+        leading: IconButton(
+          icon: const Icon(Icons.menu, color: Colors.white),
+          onPressed: () {
+            Scaffold.of(context).openDrawer();
+          },
         ),
         title: const Text(
           "Categories",
           style: TextStyle(fontWeight: FontWeight.w600),
         ),
-        // title: const Text(" "),
         actions: [
           IconButton(
             icon: const Icon(Icons.add),
@@ -73,70 +90,148 @@ class _ViewCategoryState extends State<ViewCategory> {
           )
         ],
       ),
-      body: categoires == null || categoires!.isEmpty
-          ? const Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Column(
-                  children: categoires!.map((category) {
-                    return Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      elevation: 3,
-                      margin: const EdgeInsets.symmetric(vertical: 8),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              category.name,
-                              style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(category.description),
-                            const SizedBox(height: 8),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                ElevatedButton.icon(
-                                  onPressed: () {
-                                    // TODO: Navigate to edit screen
-                                  },
-                                  icon: const Icon(Icons.edit, size: 16),
-                                  label: const Text("Edit"),
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.blue,
-                                    foregroundColor: Colors.white,
-                                  ),
-                                ),
-                                const SizedBox(width: 8),
-                                ElevatedButton.icon(
-                                  onPressed: () {
-                                    // TODO: Call delete function
-                                  },
-                                  icon: const Icon(Icons.delete, size: 16),
-                                  label: const Text("Delete"),
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.red,
-                                    foregroundColor: Colors.white,
-                                  ),
-                                ),
-                              ],
-                            )
-                          ],
-                        ),
-                      ),
-                    );
-                  }).toList(),
+      body: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(16.0),
+            child: TextField(
+              controller: _searchController,
+              onChanged: _filterCategory,
+              decoration: InputDecoration(
+                hintText: 'Search products...',
+                prefixIcon: const Icon(Icons.search, color: Colors.grey),
+                suffixIcon: searchQuery.isNotEmpty
+                    ? IconButton(
+                        icon: const Icon(Icons.clear, color: Colors.grey),
+                        onPressed: () {
+                          _searchController.clear();
+                          _filterCategory('');
+                        },
+                      )
+                    : null,
+                filled: true,
+                fillColor: Colors.grey[100],
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide.none,
+                ),
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 12,
                 ),
               ),
             ),
+          ),
+          Expanded(
+            child: isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : isEmpty
+                    ? Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              searchQuery.isNotEmpty
+                                  ? Icons.search_off
+                                  : Icons.inventory_2_outlined,
+                              size: 64,
+                              color: Colors.grey[400],
+                            ),
+                            const SizedBox(height: 16),
+                            Text(
+                              searchQuery.isNotEmpty
+                                  ? 'No products found for "$searchQuery"'
+                                  : 'No products available',
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.grey[600],
+                              ),
+                            ),
+                            if (searchQuery.isEmpty) ...[
+                              const SizedBox(height: 8),
+                              TextButton.icon(
+                                onPressed: () {
+                                  // TODO: Navigate to Add Product Page
+                                },
+                                icon: const Icon(Icons.add),
+                                label: const Text('Add your first product'),
+                              ),
+                            ]
+                          ],
+                        ),
+                      )
+                    : Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: RefreshIndicator(
+                          onRefresh: () async => _filterCategory(''),
+                          child: ListView.builder(
+                            itemCount: filteredProducts!.length,
+                            itemBuilder: (context, index) {
+                              final category = filteredProducts![index];
+                              return Card(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                elevation: 3,
+                                margin: const EdgeInsets.symmetric(vertical: 8),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        category.name,
+                                        style: const TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Text(category.description),
+                                      const SizedBox(height: 8),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
+                                        children: [
+                                          ElevatedButton.icon(
+                                            onPressed: () {
+                                              // TODO: Navigate to edit screen
+                                            },
+                                            icon: const Icon(Icons.edit,
+                                                size: 16),
+                                            label: const Text("Edit"),
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: Colors.blue,
+                                              foregroundColor: Colors.white,
+                                            ),
+                                          ),
+                                          const SizedBox(width: 8),
+                                          ElevatedButton.icon(
+                                            onPressed: () {
+                                              // TODO: Call delete function
+                                            },
+                                            icon: const Icon(Icons.delete,
+                                                size: 16),
+                                            label: const Text("Delete"),
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: Colors.red,
+                                              foregroundColor: Colors.white,
+                                            ),
+                                          ),
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+          )
+        ],
+      ),
     );
   }
 }
