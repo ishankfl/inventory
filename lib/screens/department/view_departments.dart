@@ -215,13 +215,13 @@ class _ViewAllDepartmentsState extends State<ViewAllDepartments>
         // backgroundColor: Colors.white,
         // foregroundColor: Colors.black87,
         elevation: 0,
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(1),
-          child: Container(
-            height: 1,
-            color: Colors.grey[200],
-          ),
-        ),
+        // bottom: PreferredSize(
+        //   preferredSize: const Size.fromHeight(1),
+        //   child: Container(
+        //     height: 1,
+        //     color: Colors.grey[200],
+        //   ),
+        // ),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
@@ -240,6 +240,8 @@ class _ViewAllDepartmentsState extends State<ViewAllDepartments>
         children: [
           // Search Bar
           Container(
+            color: Color(0xFF007bff),
+
             // color: Colors.white,
             padding: const EdgeInsets.all(16.0),
             child: TextField(

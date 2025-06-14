@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:inventory/main.dart';
 import 'package:inventory/screens/category/view_category.dart';
 import 'package:inventory/screens/department/view_departments.dart';
+import 'package:inventory/screens/issues/create_product_issue.dart';
 import 'package:inventory/screens/login/login_screen.dart';
 import 'package:inventory/screens/products/view_products.dart';
 import 'package:inventory/utils/token_utils.dart';
@@ -47,11 +48,9 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
 
   List<Widget> get _pages => [
         ViewProducts(),
-        ViewCategory(),
+        const ViewCategory(),
         const ViewAllDepartments(),
-        isExpired
-            ? LoginScreen()
-            : const Center(child: Text('Issue Items Page')),
+        isExpired ? const LoginScreen() : const CreateProductIssue(),
       ];
 
   @override
@@ -96,7 +95,7 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
                 themeNotifier.value = value ? ThemeMode.dark : ThemeMode.light;
               },
             ),
-            Divider(color: theme.dividerColor),
+            // Divider(color: Colors.white),
             ListTile(
               leading: Icon(Icons.logout, color: theme.colorScheme.onSurface),
               title: Text('Logout',
@@ -105,7 +104,7 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
                 TokenUtils.clearToken();
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (_) => LoginScreen()),
+                  MaterialPageRoute(builder: (_) => const LoginScreen()),
                 );
               },
             ),
@@ -114,7 +113,7 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
       ),
       body: _pages[_currentIndex],
       floatingActionButton: FloatingActionButton(
-        backgroundColor: theme.primaryColor,
+        backgroundColor: const Color(0xFF007bff),
         foregroundColor: theme.colorScheme.onPrimary,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30),
@@ -126,11 +125,13 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: AnimatedBottomNavigationBar.builder(
+        // borderColor: Colors.red,
+        // splashColor: Colors.green,
         itemCount: _iconList.length,
         tabBuilder: (int index, bool isActive) {
           final color = isActive
-              ? Color.fromARGB(255, 255, 255, 255)
-              : Color.fromARGB(255, 199, 230, 243);
+              ? const Color.fromARGB(255, 255, 255, 255)
+              : const Color.fromARGB(255, 199, 230, 243);
           return Column(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,

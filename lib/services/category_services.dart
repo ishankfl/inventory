@@ -31,15 +31,20 @@ class CategoiresService {
           )
           .timeout(const Duration(seconds: 10));
 
-      final resBody = jsonDecode(response.body);
-      print(response.statusCode);
+      print(response.body);
+      if (response.statusCode == 200) {
+        final resBody = jsonDecode(response.body);
+      } else if (response.statusCode == 409) {
+        return {
+          'success': false,
+          'message': 'Category with this name already exist' ??
+              'Failed to add Category.'
+        };
+      }
       if (response.statusCode == 200) {
         return {'success': true, 'message': 'Category added successfully.'};
       } else {
-        return {
-          'success': false,
-          'message': resBody['message'] ?? 'Failed to add Category.'
-        };
+        return {'success': false, 'message': 'Failed to add Category.'};
       }
     } catch (e) {
       print(e);
@@ -85,9 +90,9 @@ class CategoiresService {
   }
 
   /// Deletes a Category by ID
-  static Future<bool> deleteCategoires(int id) async {
+  static Future<bool> deleteCategoires(String id) async {
     final token = await TokenUtils.getToken();
-    final url = Uri.parse('$baseUrl/api/Category/$id');
+    final url = Uri.parse('$baseUrl/Category/$id');
 
     try {
       final response = await http.delete(
@@ -96,6 +101,8 @@ class CategoiresService {
           'Authorization': 'Bearer $token',
         },
       );
+
+      print(response.body);
 
       return response.statusCode == 200 || response.statusCode == 204;
     } catch (e) {
@@ -162,6 +169,37 @@ class CategoiresService {
       }
     } catch (e) {
       print('Update Category error: $e');
+      return {
+        'success': false,
+        'message': 'Something went wrong. Please try again later.'
+      };
+    }
+  }
+
+  /// Deletes a Category by ID and returns success with a message
+  static Future<Map<String, dynamic>> deleteCategory(int id) async {
+    final token = await TokenUtils.getToken();
+    final url = Uri.parse('$baseUrl/api/Category/$id');
+
+    try {
+      final response = await http.delete(
+        url,
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 204) {
+        return {'success': true, 'message': 'Category deleted successfully.'};
+      } else {
+        final resBody = jsonDecode(response.body);
+        return {
+          'success': false,
+          'message': resBody['message'] ?? 'Failed to delete category.'
+        };
+      }
+    } catch (e) {
+      print('Delete Category error: $e');
       return {
         'success': false,
         'message': 'Something went wrong. Please try again later.'

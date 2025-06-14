@@ -65,7 +65,9 @@ class _AddProductPageState extends State<AddProductPage> {
         _formKey.currentState!.reset();
         setState(() {
           selectedCategoryId = null;
+          error = '';
         });
+        Navigator.pop(context);
       } else {
         setState(() {
           error = "Failed to add product: ${response.body}";
@@ -100,7 +102,10 @@ class _AddProductPageState extends State<AddProductPage> {
           child: Column(
             children: [
               if (error.isNotEmpty)
-                Text(error, style: const TextStyle(color: Colors.red)),
+                Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Text(error, style: const TextStyle(color: Colors.red)),
+                ),
               TextFormField(
                 controller: nameController,
                 style: const TextStyle(color: Color(0xFF007bff)),
@@ -213,7 +218,7 @@ class _AddProductPageState extends State<AddProductPage> {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () => {},
+                  onPressed: () => {_handleSubmit()},
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color(0xFF007bff),
                     foregroundColor: Colors.white,

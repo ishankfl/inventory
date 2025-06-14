@@ -172,13 +172,6 @@ class _ViewProductsState extends State<ViewProducts>
           style: TextStyle(fontWeight: FontWeight.w600),
         ),
         elevation: 0,
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(1),
-          child: Container(
-            height: 1,
-            color: Colors.grey[200],
-          ),
-        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
@@ -202,15 +195,16 @@ class _ViewProductsState extends State<ViewProducts>
             },
             tooltip: "Add New Product",
           ),
-          const SizedBox(width: 8),
+          // const SizedBox(width: 8),
         ],
       ),
       body: Column(
         children: [
           // Search Bar
           Container(
+            color: Color(0xFF007bff),
             // color: Colors.white,
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(20.0),
             child: TextField(
               controller: _searchController,
               onChanged: _filterProducts,

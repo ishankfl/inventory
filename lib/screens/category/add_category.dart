@@ -40,6 +40,7 @@ class _AddCategoryPageState extends State<AddCategoryPage> {
       _isLoading = false;
     });
 
+    Navigator.pop(context);
     if (response['success']) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(response['message'])),
@@ -64,7 +65,11 @@ class _AddCategoryPageState extends State<AddCategoryPage> {
           child: Column(
             children: [
               if (_errorMessage != null)
-                Text(_errorMessage!, style: const TextStyle(color: Colors.red)),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Text(_errorMessage!,
+                      style: const TextStyle(color: Colors.red)),
+                ),
               TextFormField(
                 controller: _nameController,
                 decoration: const InputDecoration(labelText: 'Category Name'),

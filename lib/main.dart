@@ -7,11 +7,11 @@ final ValueNotifier<ThemeMode> themeNotifier = ValueNotifier(ThemeMode.light);
 
 void main() async {
   HttpOverrides.global = MyHttpOverrides();
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,9 +19,25 @@ class MyApp extends StatelessWidget {
       valueListenable: themeNotifier,
       builder: (context, currentTheme, _) {
         return MaterialApp(
-          title: 'IMS Login',
+          // title: 'IMS Login',
           themeMode: currentTheme,
           theme: ThemeData(
+            elevatedButtonTheme: ElevatedButtonThemeData(
+              style: ButtonStyle(
+                foregroundColor:
+                    MaterialStateColor.resolveWith((states) => Colors.white),
+                backgroundColor: MaterialStateColor.resolveWith(
+                    (states) => Color(0xFF007bff)),
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(6), // smaller radius
+                  ),
+                ),
+              ),
+            ),
+
+            cardColor: Colors.white,
+            // cardTheme: CardTheme(color: Color.fromARGB(255, 255, 228, 130)),
             primaryColor: Color(0xFF007bff),
             useMaterial3: true,
             colorScheme:

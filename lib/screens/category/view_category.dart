@@ -52,6 +52,22 @@ class _ViewCategoryState extends State<ViewCategory> {
     });
   }
 
+  void _deleteCategory(String id) async {
+    print("Clicked");
+    final deleted = await CategoiresService.deleteCategoires(id);
+    if (deleted) {
+      // Scaffol.of(context).
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text("Successfully Deleted")));
+      setState(() {
+        getAllCate();
+      });
+    } else {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text("Some thing went wrong")));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final isLoading = categoires == null;
@@ -93,6 +109,7 @@ class _ViewCategoryState extends State<ViewCategory> {
       body: Column(
         children: [
           Container(
+            color: Color(0xFF007bff),
             padding: const EdgeInsets.all(16.0),
             child: TextField(
               controller: _searchController,
@@ -194,29 +211,36 @@ class _ViewCategoryState extends State<ViewCategory> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.end,
                                         children: [
-                                          ElevatedButton.icon(
-                                            onPressed: () {
-                                              // TODO: Navigate to edit screen
-                                            },
+                                          OutlinedButton.icon(
+                                            onPressed: () => {},
                                             icon: const Icon(Icons.edit,
                                                 size: 16),
-                                            label: const Text("Edit"),
-                                            style: ElevatedButton.styleFrom(
-                                              backgroundColor: Colors.blue,
-                                              foregroundColor: Colors.white,
+                                            label: const Text('Edit'),
+                                            style: OutlinedButton.styleFrom(
+                                              foregroundColor: Colors.blue,
+                                              side: const BorderSide(
+                                                  color: Colors.blue),
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
+                                              ),
                                             ),
                                           ),
                                           const SizedBox(width: 8),
                                           ElevatedButton.icon(
-                                            onPressed: () {
-                                              // TODO: Call delete function
-                                            },
+                                            onPressed: () =>
+                                                {_deleteCategory(category.id)},
+                                            // onDelete(department.id),
                                             icon: const Icon(Icons.delete,
                                                 size: 16),
-                                            label: const Text("Delete"),
+                                            label: const Text('Delete'),
                                             style: ElevatedButton.styleFrom(
                                               backgroundColor: Colors.red,
                                               foregroundColor: Colors.white,
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
+                                              ),
                                             ),
                                           ),
                                         ],
