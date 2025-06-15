@@ -137,13 +137,10 @@ class CategoiresService {
   }
 
   /// Updates a Category by ID
-  static Future<Map<String, dynamic>> updateCategoires({
-    required int id,
-    required String name,
-    required String description,
-  }) async {
+  static Future<Map<String, dynamic>> updateCategoires(
+      Categoires category) async {
     final token = await TokenUtils.getToken();
-    final url = Uri.parse('$baseUrl/api/Category/$id');
+    final url = Uri.parse('$baseUrl/Category/${category.id}');
 
     try {
       final response = await http.put(
@@ -153,14 +150,19 @@ class CategoiresService {
           'Authorization': 'Bearer $token',
         },
         body: jsonEncode({
-          'name': name,
-          'description': description,
+          'name': category.name,
+          'description': category.description,
         }),
       );
 
       final resBody = jsonDecode(response.body);
       if (response.statusCode == 200) {
         return {'success': true, 'message': 'Category updated successfully.'};
+      } else if (response.statusCode == 409) {
+        return {
+          'success': false,
+          'message': resBody['message'] ?? 'Failed to update Category.'
+        };
       } else {
         return {
           'success': false,

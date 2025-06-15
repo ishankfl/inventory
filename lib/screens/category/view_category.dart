@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:inventory/models/category.dart';
 import 'package:inventory/screens/category/add_category.dart';
+import 'package:inventory/screens/category/edit_category.dart';
 import 'package:inventory/services/category_services.dart';
 import 'package:inventory/utils/token_utils.dart';
 
@@ -212,7 +213,14 @@ class _ViewCategoryState extends State<ViewCategory> {
                                             MainAxisAlignment.end,
                                         children: [
                                           OutlinedButton.icon(
-                                            onPressed: () => {},
+                                            onPressed: () => {
+                                              Navigator.push(context,
+                                                  MaterialPageRoute(
+                                                      builder: (builder) {
+                                                return EditCategoryPage(
+                                                    category: category);
+                                              }))
+                                            },
                                             icon: const Icon(Icons.edit,
                                                 size: 16),
                                             label: const Text('Edit'),

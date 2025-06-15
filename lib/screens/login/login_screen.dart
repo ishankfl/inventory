@@ -38,6 +38,18 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.fork_left),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const CustomNavigationBar()),
+            );
+          },
+        ),
+      ),
       backgroundColor: const Color(0xFF007bff),
       body: Center(
         child: Padding(

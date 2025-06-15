@@ -1,7 +1,7 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:inventory/screens/common/nav_bar.dart';
 import 'package:inventory/utils/http_overide.dart';
-import 'dart:io';
 
 final ValueNotifier<ThemeMode> themeNotifier = ValueNotifier(ThemeMode.light);
 
@@ -19,34 +19,32 @@ class MyApp extends StatelessWidget {
       valueListenable: themeNotifier,
       builder: (context, currentTheme, _) {
         return MaterialApp(
-          // title: 'IMS Login',
+          debugShowCheckedModeBanner: false,
           themeMode: currentTheme,
           theme: ThemeData(
-            elevatedButtonTheme: ElevatedButtonThemeData(
-              style: ButtonStyle(
-                foregroundColor:
-                    MaterialStateColor.resolveWith((states) => Colors.white),
-                backgroundColor: MaterialStateColor.resolveWith(
-                    (states) => Color(0xFF007bff)),
-                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                  RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(6), // smaller radius
-                  ),
-                ),
-              ),
-            ),
-
-            cardColor: Colors.white,
-            // cardTheme: CardTheme(color: Color.fromARGB(255, 255, 228, 130)),
-            primaryColor: Color(0xFF007bff),
             useMaterial3: true,
-            colorScheme:
-                ColorScheme.fromSeed(seedColor: const Color(0xFF007bff)),
-            scaffoldBackgroundColor: Colors.white,
+            primaryColor: const Color(0xFF007bff),
+            scaffoldBackgroundColor: const Color(0xFFF4F9FF),
+            cardColor: Colors.white,
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: const Color(0xFF007bff),
+              brightness: Brightness.light,
+            ),
             appBarTheme: const AppBarTheme(
               backgroundColor: Color(0xFF007bff),
               foregroundColor: Colors.white,
               titleTextStyle: TextStyle(color: Colors.white, fontSize: 20),
+              iconTheme: IconThemeData(color: Colors.white),
+            ),
+            elevatedButtonTheme: ElevatedButtonThemeData(
+              style: ButtonStyle(
+                foregroundColor: MaterialStateProperty.all(Colors.white),
+                backgroundColor: MaterialStateProperty.all(Color(0xFF007bff)),
+                shape: MaterialStateProperty.all(
+                  RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(6)),
+                ),
+              ),
             ),
             inputDecorationTheme: InputDecorationTheme(
               labelStyle: const TextStyle(color: Color(0xFF007bff)),
@@ -61,11 +59,55 @@ class MyApp extends StatelessWidget {
               ),
             ),
           ),
-          darkTheme: ThemeData.dark(useMaterial3: true),
-          debugShowCheckedModeBanner: false,
-          home: const CustomNavigationBar(),
+          darkTheme: ThemeData(
+            brightness: Brightness.dark,
+            useMaterial3: true,
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: const Color(0xFF007bff),
+              brightness: Brightness.dark,
+            ),
+            appBarTheme: const AppBarTheme(
+              backgroundColor: Color(0xFF121212),
+              foregroundColor: Colors.white,
+              titleTextStyle: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+            elevatedButtonTheme: ElevatedButtonThemeData(
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(Color(0xFF007bff)),
+                foregroundColor: MaterialStateProperty.all(Colors.white),
+                shape: MaterialStateProperty.all(
+                  RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(6)),
+                ),
+              ),
+            ),
+            inputDecorationTheme: InputDecorationTheme(
+              labelStyle: const TextStyle(color: Colors.white),
+              floatingLabelStyle: const TextStyle(color: Colors.white),
+              enabledBorder: OutlineInputBorder(
+                borderSide: const BorderSide(color: Colors.white54),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: const BorderSide(color: Colors.white),
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+          ),
+          home: const AppWithThemeToggle(),
         );
       },
+    );
+  }
+}
+
+class AppWithThemeToggle extends StatelessWidget {
+  const AppWithThemeToggle({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(
+      body: CustomNavigationBar(),
     );
   }
 }

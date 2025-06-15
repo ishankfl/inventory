@@ -47,18 +47,30 @@ class DepartmentService {
     }
   }
 
-  static Future<bool> updateDepartment(
-      int id, String name, String description) async {
+  static Future<Map<String, dynamic>> updateDepartment(Department dept) async {
     try {
       final response = await http.put(
-        Uri.parse('$baseUrl/Department"/$id'),
+        Uri.parse('$baseUrl/Department/${dept.id}'),
         headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({'name': name, 'description': description}),
+        body: jsonEncode({
+          'name': dept.name,
+          'description': dept.description,
+        }),
       );
-      return response.statusCode == 200;
+
+      if (response.statusCode == 200) {
+        return {'success': true};
+      } else if (response.statusCode == 400) {
+        final body = jsonDecode(response.body);
+        return {'success': false, 'message': body['message'] ?? 'Bad request'};
+      } else if (response.statusCode == 404) {
+        return {'success': false, 'message': 'Department not found'};
+      } else {
+        return {'success': false, 'message': 'Unexpected error'};
+      }
     } catch (e) {
       print('Error updating department: $e');
-      return false;
+      return {'success': false, 'message': e.toString()};
     }
   }
 }

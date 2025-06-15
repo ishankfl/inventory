@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:inventory/models/department.dart';
 import 'package:inventory/screens/department/add_department.dart';
+import 'package:inventory/screens/department/edit_department.dart';
 import 'package:inventory/services/department_service.dart';
 import 'package:inventory/utils/token_utils.dart';
 
@@ -162,10 +163,12 @@ class _ViewAllDepartmentsState extends State<ViewAllDepartments>
   }
 
   void onEdit(Department department) {
-    // TODO: Navigate to edit page
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Edit ${department.name} - Not implemented yet')),
-    );
+    // ScaffoldMessenger.of(context).showSnackBar(
+    //   SnackBar(content: Text('Edit ${department.name} - Not implemented yet')),
+    // );
+    Navigator.push(context, MaterialPageRoute(builder: (builder) {
+      return EditDepartmentPage(department: department);
+    }));
   }
 
   void onAdd() async {
@@ -179,11 +182,6 @@ class _ViewAllDepartmentsState extends State<ViewAllDepartments>
     Navigator.push(context, MaterialPageRoute(builder: (builder) {
       return AddDepartmentPage();
     }));
-    return;
-    // TODO: Navigate to add page
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Add Department - Not implemented yet')),
-    );
   }
 
   @override
@@ -471,35 +469,6 @@ class _ViewAllDepartmentsState extends State<ViewAllDepartments>
                 ),
                 const SizedBox(height: 16),
               ],
-
-              // Department ID
-              // Row(
-              //   children: [
-              //     Container(
-              //       padding:
-              //           const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              //       decoration: BoxDecoration(
-              //         color: Colors.purple.withOpacity(0.1),
-              //         borderRadius: BorderRadius.circular(20),
-              //       ),
-              //       // child: Row(
-              //       //   mainAxisSize: MainAxisSize.min,
-              //       //   children: [
-              //       //     // Icon(Icons.tag, size: 14, color: Colors.purple[600]),
-              //       //     // const SizedBox(width: 4),
-              //       //     // Text(
-              //       //     //   'ID: ${department.id}',
-              //       //     //   style: TextStyle(
-              //       //     //     fontSize: 12,
-              //       //     //     fontWeight: FontWeight.w500,
-              //       //     //     color: Colors.purple[600],
-              //       //     //   ),
-              //       //     // ),
-              //       //   ],
-              //       // ),
-              //     ),
-              //   ],
-              // ),
 
               const SizedBox(height: 20),
 
