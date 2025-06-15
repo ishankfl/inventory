@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:convert';
 
 import 'package:inventory/constants/server.dart';
@@ -33,6 +35,7 @@ class IssueService {
           .timeout(const Duration(seconds: 10));
 
       print(response.body);
+      print(response.statusCode);
       if (response.statusCode == 200) {
       } else if (response.statusCode == 409) {
         return {
@@ -74,12 +77,14 @@ class IssueService {
 
       if (response.statusCode == 200) {
         final model = ProductIssue.fromJson(jsonDecode(response.body));
-        return model; // ✅ return the actual object
+        return model;
       } else if (response.statusCode == 409) {
         return {
           'success': false,
           'message': 'Category with this name already exists.'
         };
+      } else if (response.statusCode == 204) {
+        return null;
       } else {
         return {
           'success': false,
@@ -181,6 +186,35 @@ class IssueService {
     }
   }
 
+  static Future<bool> makeCompleteIssue(String issueId) async {
+    final token = await TokenUtils.getToken();
+    final url = Uri.parse('$baseUrl/Issues/CompleteIssue/$issueId');
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      print('Response body: ${response.body}');
+      print('Status code: ${response.statusCode}');
+
+      if (response.statusCode == 200) {
+        print('Issue successfully marked as complete.');
+        return true;
+      } else {
+        print('Failed to complete issue: ${response.statusCode}');
+        return false;
+      }
+    } catch (e) {
+      print('Error occurred while completing issue: $e');
+      return false;
+    }
+  }
+
   /// Remove all issued items for a department
   static Future<bool> removeAllIssuedItemsForDepartment({
     required String departmentId,
@@ -196,6 +230,28 @@ class IssueService {
     } catch (e) {
       print(e);
       return false;
+    }
+  }
+
+  static Future<List<ProductIssue>> getAllProductIssue() async {
+    final token = await TokenUtils.getToken();
+    final url = Uri.parse('$baseUrl/Issues');
+    try {
+      final response = await http.get(
+        url,
+        headers: {'Authorization': 'Bearer $token'},
+      ).timeout(const Duration(seconds: 10));
+      print(response.body);
+      if (response.statusCode == 200) {
+        final List<dynamic> jsonResponse = json.decode(response.body);
+        print(jsonResponse);
+        return jsonResponse.map((item) => ProductIssue.fromJson(item)).toList();
+      } else {
+        throw Exception('Failed to load issues: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error fetching issues: $e');
+      throw Exception('Failed to load issues');
     }
   }
 }

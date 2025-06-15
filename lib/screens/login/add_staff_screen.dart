@@ -1,5 +1,8 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:inventory/screens/users/view_staff_page.dart';
 import 'dart:convert';
 
 import 'package:inventory/services/auth_service.dart';
@@ -47,6 +50,9 @@ class _AddStaffScreenState extends State<AddStaffScreen> {
 
       if (response['success']) {
         // Show success message
+        Navigator.push(context, MaterialPageRoute(builder: (builder) {
+          return const ViewStaffPage();
+        }));
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Staff added successfully!')),
         );
@@ -74,21 +80,14 @@ class _AddStaffScreenState extends State<AddStaffScreen> {
     return Scaffold(
       // backgroundColor: Colors.deepPurple[900],
       appBar: AppBar(
-          // title: const Text('Add New Staff'),
-          // backgroundColor: Colors.deepPurple[700],
-          ),
+        title: const Text('Add New Staff'),
+        // backgroundColor: Colors.deepPurple[700],
+      ),
       body: Padding(
         padding: const EdgeInsets.all(24),
         child: SingleChildScrollView(
           child: Column(
             children: [
-              const Text(
-                'Add New Staff Here',
-                style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white),
-              ),
               const SizedBox(height: 30),
               if (error.isNotEmpty)
                 Container(
@@ -115,27 +114,39 @@ class _AddStaffScreenState extends State<AddStaffScreen> {
                   obscureText: true),
               const SizedBox(height: 15),
               DropdownButtonFormField<String>(
-                dropdownColor: Colors.red,
+                dropdownColor: Color.fromARGB(
+                    255, 241, 246, 252), // dropdown list background
                 value: selectedRole,
+                style:
+                    TextStyle(color: Color(0xFF007bff)), // selected value color
                 onChanged: (value) => setState(() => selectedRole = value),
                 decoration: _inputDecoration('Select Role'),
                 items: const [
                   DropdownMenuItem(
-                      value: '0',
-                      child: Text(
-                        'Admin',
-                        style: TextStyle(color: Colors.white),
-                      )),
+                    value: '0',
+                    child: Text(
+                      'Admin',
+                      style: TextStyle(
+                          color: Color(0xFF007bff)), // match selected style
+                    ),
+                  ),
                   DropdownMenuItem(
-                      value: '1',
-                      child:
-                          Text('Staff', style: TextStyle(color: Colors.white))),
+                    value: '1',
+                    child: Text(
+                      'Staff',
+                      style: TextStyle(
+                          color: Color(0xFF007bff)), // match selected style
+                    ),
+                  ),
                 ],
               ),
               const SizedBox(height: 30),
-              ElevatedButton(
-                onPressed: _handleSubmit,
-                child: const Text('Add Staff'),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: _handleSubmit,
+                  child: const Text('Add Staff'),
+                ),
               ),
             ],
           ),
@@ -147,15 +158,15 @@ class _AddStaffScreenState extends State<AddStaffScreen> {
   InputDecoration _inputDecoration(String label) {
     return InputDecoration(
       labelText: label,
-      labelStyle: const TextStyle(color: Colors.white),
-      enabledBorder: OutlineInputBorder(
-        borderSide: const BorderSide(color: Colors.white),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderSide: const BorderSide(color: Colors.white),
-        borderRadius: BorderRadius.circular(10),
-      ),
+      // labelStyle: const TextStyle(color: Colors.white),
+      // enabledBorder: OutlineInputBorder(
+      //   borderSide: const BorderSide(color: Colors.white),
+      //   borderRadius: BorderRadius.circular(10),
+      // ),
+      // focusedBorder: OutlineInputBorder(
+      //   borderSide: const BorderSide(color: Colors.white),
+      //   borderRadius: BorderRadius.circular(10),
+      // ),
     );
   }
 
@@ -165,22 +176,23 @@ class _AddStaffScreenState extends State<AddStaffScreen> {
       required IconData icon,
       bool obscureText = false}) {
     return TextField(
-      controller: controller,
-      obscureText: obscureText,
-      style: const TextStyle(color: Colors.white),
-      decoration: InputDecoration(
-        labelText: label,
-        labelStyle: const TextStyle(color: Colors.white),
-        prefixIcon: Icon(icon, color: Colors.white),
-        enabledBorder: OutlineInputBorder(
-          borderSide: const BorderSide(color: Colors.white),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: const BorderSide(color: Colors.white),
-          borderRadius: BorderRadius.circular(10),
-        ),
-      ),
-    );
+        controller: controller,
+        obscureText: obscureText,
+        // style: const TextStyle(color: Colors.white),
+        decoration: InputDecoration(
+          labelText: label,
+        )
+        //   labelStyle: const TextStyle(color: Colors.white),
+        //   prefixIcon: Icon(icon, color: Colors.white),
+        //   enabledBorder: OutlineInputBorder(
+        //     borderSide: const BorderSide(color: Colors.white),
+        //     borderRadius: BorderRadius.circular(10),
+        //   ),
+        //   focusedBorder: OutlineInputBorder(
+        //     borderSide: const BorderSide(color: Colors.white),
+        //     borderRadius: BorderRadius.circular(10),
+        //   ),
+        // ),
+        );
   }
 }

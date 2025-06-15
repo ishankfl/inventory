@@ -1,5 +1,6 @@
+// ignore_for_file: avoid_print
+
 import 'dart:convert';
-import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:inventory/constants/server.dart';
 import 'package:inventory/models/category.dart';
@@ -13,6 +14,7 @@ class CategoiresService {
     required String userId,
   }) async {
     final token = await TokenUtils.getToken();
+
     final url = Uri.parse('$baseUrl/Category');
 
     try {
@@ -33,12 +35,10 @@ class CategoiresService {
 
       print(response.body);
       if (response.statusCode == 200) {
-        final resBody = jsonDecode(response.body);
       } else if (response.statusCode == 409) {
         return {
           'success': false,
-          'message': 'Category with this name already exist' ??
-              'Failed to add Category.'
+          'message': 'Category with this name already exist'
         };
       }
       if (response.statusCode == 200) {

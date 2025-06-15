@@ -4,8 +4,11 @@ import 'package:inventory/main.dart';
 import 'package:inventory/screens/category/view_category.dart';
 import 'package:inventory/screens/department/view_departments.dart';
 import 'package:inventory/screens/issues/create_product_issue.dart';
+import 'package:inventory/screens/issues/view_issue.dart';
+import 'package:inventory/screens/login/add_staff_screen.dart';
 import 'package:inventory/screens/login/login_screen.dart';
 import 'package:inventory/screens/products/view_products.dart';
+import 'package:inventory/screens/users/view_staff_page.dart';
 import 'package:inventory/utils/token_utils.dart';
 
 class CustomNavigationBar extends StatefulWidget {
@@ -78,6 +81,37 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
               title: Text('Profile',
                   style: TextStyle(color: theme.colorScheme.onSurface)),
               onTap: () {},
+            ),
+            ListTile(
+              leading: Icon(Icons.people, color: theme.colorScheme.onSurface),
+              title: Text('Stafff',
+                  style: TextStyle(color: theme.colorScheme.onSurface)),
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (builder) {
+                  return const ViewStaffPage();
+                }));
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.add, color: theme.colorScheme.onSurface),
+              title: Text('Add Staff',
+                  style: TextStyle(color: theme.colorScheme.onSurface)),
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (builder) {
+                  return const AddStaffScreen();
+                }));
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.remove_red_eye,
+                  color: theme.colorScheme.onSurface),
+              title: Text('View Issue',
+                  style: TextStyle(color: theme.colorScheme.onSurface)),
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (builder) {
+                  return const ViewIssue();
+                }));
+              },
             ),
             ListTile(
               leading: Icon(Icons.settings, color: theme.colorScheme.onSurface),
