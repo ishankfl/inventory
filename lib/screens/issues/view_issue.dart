@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:inventory/models/product_issue.dart';
 import 'package:inventory/services/issue_service.dart';
@@ -203,7 +205,7 @@ class _ViewIssueState extends State<ViewIssue> with TickerProviderStateMixin {
 
     return Container(
       decoration: BoxDecoration(
-        // color: Theme.of(context).primaryColor,
+        color: Theme.of(context).primaryColor,
         boxShadow: [
           BoxShadow(
             color: colorScheme.shadow.withOpacity(0.1),
@@ -219,17 +221,17 @@ class _ViewIssueState extends State<ViewIssue> with TickerProviderStateMixin {
             Expanded(
               child: Row(
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.filter_list_rounded,
-                    color: colorScheme.primary,
+                    color: Colors.white,
                     size: 20,
                   ),
                   const SizedBox(width: 8),
-                  Text(
+                  const Text(
                     'Filters & Sort',
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
-                      color: colorScheme.onSurface,
+                      color: Colors.white,
                     ),
                   ),
                   if (hasActiveFilters) ...[
@@ -238,13 +240,13 @@ class _ViewIssueState extends State<ViewIssue> with TickerProviderStateMixin {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 8, vertical: 2),
                       decoration: BoxDecoration(
-                        color: colorScheme.primary,
+                        color: Colors.white,
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: Text(
+                      child: const Text(
                         'Active',
                         style: TextStyle(
-                          color: colorScheme.onPrimary,
+                          color: Colors.white,
                           fontSize: 10,
                           fontWeight: FontWeight.w600,
                         ),
@@ -270,7 +272,10 @@ class _ViewIssueState extends State<ViewIssue> with TickerProviderStateMixin {
               icon: AnimatedRotation(
                 turns: isFilterExpanded ? 0.5 : 0,
                 duration: const Duration(milliseconds: 300),
-                child: const Icon(Icons.expand_more_rounded),
+                child: const Icon(
+                  Icons.expand_more_rounded,
+                  color: Colors.white,
+                ),
               ),
               tooltip: isFilterExpanded ? 'Hide Filters' : 'Show Filters',
             ),
@@ -430,7 +435,7 @@ class _ViewIssueState extends State<ViewIssue> with TickerProviderStateMixin {
                   height: 50, // match height of text fields
                   width: 58,
                   decoration: BoxDecoration(
-                    color: colorScheme.primary.withOpacity(0.1),
+                    color: Theme.of(context).primaryColor.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: IconButton(
@@ -438,7 +443,7 @@ class _ViewIssueState extends State<ViewIssue> with TickerProviderStateMixin {
                       sortAscending
                           ? Icons.arrow_upward_rounded
                           : Icons.arrow_downward_rounded,
-                      color: colorScheme.primary,
+                      color: Theme.of(context).primaryColor,
                     ),
                     onPressed: () {
                       setState(() {
@@ -495,7 +500,7 @@ class _ViewIssueState extends State<ViewIssue> with TickerProviderStateMixin {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             CircularProgressIndicator(
-              color: theme.colorScheme.primary,
+              color: Theme.of(context).primaryColor,
             ),
             const SizedBox(height: 16),
             Text(
@@ -673,13 +678,13 @@ class _ViewIssueState extends State<ViewIssue> with TickerProviderStateMixin {
               label: Text(
                 '$totalQuantity items',
                 style: theme.textTheme.labelSmall?.copyWith(
-                  color: colorScheme.primary,
+                  color: Theme.of(context).primaryColor,
                 ),
               ),
-              backgroundColor: colorScheme.primary.withOpacity(0.1),
+              backgroundColor: Theme.of(context).primaryColor.withOpacity(0.1),
               shape: StadiumBorder(
                 side: BorderSide(
-                  color: colorScheme.primary.withOpacity(0.2),
+                  color: Theme.of(context).primaryColor.withOpacity(0.2),
                 ),
               ),
             ),
@@ -688,7 +693,7 @@ class _ViewIssueState extends State<ViewIssue> with TickerProviderStateMixin {
             //   '\$${totalPrice.toStringAsFixed(2)}',
             //   style: theme.textTheme.bodyMedium?.copyWith(
             //     fontWeight: FontWeight.bold,
-            //     color: colorScheme.primary,
+            //     color: Theme.of(context).primaryColor,
             //   ),
             // ),
           ],
@@ -729,7 +734,9 @@ class _ViewIssueState extends State<ViewIssue> with TickerProviderStateMixin {
                             width: 40,
                             height: 40,
                             decoration: BoxDecoration(
-                              color: colorScheme.primary.withOpacity(0.1),
+                              color: Theme.of(context)
+                                  .primaryColor
+                                  .withOpacity(0.1),
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Center(
@@ -737,7 +744,7 @@ class _ViewIssueState extends State<ViewIssue> with TickerProviderStateMixin {
                                 item.quantityIssued.toString(),
                                 style: theme.textTheme.titleSmall?.copyWith(
                                   fontWeight: FontWeight.bold,
-                                  color: colorScheme.primary,
+                                  color: Theme.of(context).primaryColor,
                                 ),
                               ),
                             ),
