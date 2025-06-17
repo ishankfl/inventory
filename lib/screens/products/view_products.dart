@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:inventory/models/product.dart';
+import 'package:inventory/screens/common/snack_bar.dart';
 import 'package:inventory/screens/products/add_products.dart';
 import 'package:inventory/screens/products/edit_product.dart';
 import 'package:inventory/services/product_services.dart';
@@ -52,9 +53,7 @@ class _ViewProductsState extends State<ViewProducts>
       });
       // Handle error
       // ignore: use_build_context_synchronously
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to load products: $e')),
-      );
+      AppSnackBar.showError(context, 'Failed to load products: $e');
     }
   }
 
@@ -97,9 +96,8 @@ class _ViewProductsState extends State<ViewProducts>
   void _deleteProduct(Product product) async {
     bool isExpired = await TokenUtils.isExpiredToken();
     if (isExpired) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Please Login First with admin account")),
-      );
+      AppSnackBar.showError(context, "Please Login First with admin account");
+
       return;
     }
     final delete = await ProductService.deleteProduct(product.id);
@@ -109,32 +107,10 @@ class _ViewProductsState extends State<ViewProducts>
         filteredProducts.removeWhere((p) => p.id == product.id);
       });
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('${product.name} deleted successfully'),
-          action: SnackBarAction(
-            label: 'Undo',
-            onPressed: () {
-              // TODO: Implement undo functionality
-            },
-          ),
-        ),
-      );
+      AppSnackBar.showSuccess(context, '${product.name} deleted successfully');
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Failed to delete this product'),
-          action: SnackBarAction(
-            label: 'Undo',
-            onPressed: () {
-              // TODO: Implement undo functionality
-            },
-          ),
-        ),
-      );
+      AppSnackBar.showError(context, 'Failed to delete this product');
     }
-
-    ;
   }
 
   Color _getStockStatusColor(int quantity) {
@@ -183,10 +159,9 @@ class _ViewProductsState extends State<ViewProducts>
             onPressed: () async {
               bool isExpired = await TokenUtils.isExpiredToken();
               if (isExpired) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                      content: Text("Please Login First with admin account")),
-                );
+                AppSnackBar.showError(
+                    context, "Please Login First with admin account");
+
                 return;
               }
               Navigator.push(context, MaterialPageRoute(builder: (builder) {

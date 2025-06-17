@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:inventory/models/department.dart';
 import 'package:inventory/models/product.dart';
+import 'package:inventory/screens/common/snack_bar.dart';
 import 'package:inventory/screens/issues/department_drawer.dart';
 import 'package:inventory/services/department_service.dart';
 import 'package:inventory/services/issue_service.dart';
@@ -146,6 +147,7 @@ class _CreateProductIssueState extends State<CreateProductIssue> {
         isAvailable[product.id] = false;
         isChecking[product.id] = false;
       });
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
@@ -171,21 +173,40 @@ class _CreateProductIssueState extends State<CreateProductIssue> {
       // return;
 
       if (success != []) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-                'Issue created. $requested/${product.quantity} issued for ${product.name}!'),
-            backgroundColor: Colors.green,
-          ),
-        );
+        setState(() {
+          products = products.map((element) {
+            if (product.id == element.id) {
+              element.quantity -= requested;
+            }
+            return element;
+          }).toList();
+        });
+        AppSnackBar.showSuccess(context,
+            'Issue created. $requested/${product.quantity} issued for ${product.name}!');
+        // ScaffoldMessenger.of(context).showSnackBar(
+        //   SnackBar(
+
+        //     content: Text(),
+        //     backgroundColor: Colors.green,
+        //     behavior: SnackBarBehavior.floating, // allows positioning
+        //     margin:
+        //         EdgeInsets.only(top: 20, left: 16, right: 16), // push to top
+        //     shape: RoundedRectangleBorder(
+        //       borderRadius: BorderRadius.circular(8),
+        //     ),
+        //   ),
+        // );
+
         qtyControllers[product.id]?.clear();
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Failed to create issue for ${product.name}.'),
-            backgroundColor: Colors.red,
-          ),
-        );
+        AppSnackBar.showError(
+            context, ';Failed to create issue for ${product.name}.');
+        // ScaffoldMessenger.of(context).showSnackBar(
+        //   SnackBar(
+        //     content: Text('),
+        //     backgroundColor: Colors.red,
+        //   ),
+        // );
       }
     } catch (e) {
       setState(() {

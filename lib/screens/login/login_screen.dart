@@ -39,6 +39,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: Text("Login "),
         leading: IconButton(
           icon: const Icon(Icons.fork_left),
           onPressed: () {
@@ -50,56 +51,26 @@ class _LoginScreenState extends State<LoginScreen> {
           },
         ),
       ),
-      backgroundColor: const Color(0xFF007bff),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(24.0),
           child: SingleChildScrollView(
             child: Column(
               children: [
-                const Text(
-                  'Login',
-                  style: TextStyle(
-                    fontSize: 32,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-                const SizedBox(height: 40),
                 TextField(
                   controller: emailController,
-                  style: const TextStyle(color: Colors.white),
+                  // style: const TextStyle(color: Colors.white),
                   decoration: InputDecoration(
                     labelText: 'Email',
-                    labelStyle: const TextStyle(color: Colors.white),
-                    prefixIcon: const Icon(Icons.email, color: Colors.white),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(color: Colors.white),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(color: Colors.white),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
                   ),
                 ),
                 const SizedBox(height: 20),
                 TextField(
                   controller: passwordController,
                   obscureText: true,
-                  style: const TextStyle(color: Colors.white),
+                  // style: const TextStyle(color: Colors.white),
                   decoration: InputDecoration(
                     labelText: 'Password',
-                    labelStyle: const TextStyle(color: Colors.white),
-                    prefixIcon: const Icon(Icons.lock, color: Colors.white),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(color: Colors.white),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(color: Colors.white),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
                   ),
                 ),
                 const SizedBox(height: 30),
@@ -108,8 +79,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: ElevatedButton(
                     onPressed: _handleLogin,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      foregroundColor: const Color(0xFF007bff),
+                      foregroundColor: Colors.white,
+                      backgroundColor: const Color(0xFF007bff),
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),

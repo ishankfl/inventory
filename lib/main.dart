@@ -93,6 +93,14 @@ class MyApp extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10),
               ),
             ),
+            snackBarTheme: SnackBarThemeData(
+              backgroundColor: Colors.green,
+              contentTextStyle: TextStyle(color: Colors.white),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              behavior: SnackBarBehavior.floating,
+            ),
           ),
           home: const AppWithThemeToggle(),
         );

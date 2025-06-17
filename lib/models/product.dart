@@ -5,12 +5,16 @@ class Product {
   final String id;
   final String name;
   final String description;
-  final int quantity;
+  int quantity;
   final double price;
   final String categoryId;
   final String userId;
   final User user;
   final Categoires category;
+
+  // setQty(int qty) {
+  //   this.quantity = qty;
+  // }
 
   Product({
     required this.id,
@@ -55,4 +59,17 @@ class Product {
       'category': category.toJson(),
     };
   }
+
+  // Product copyWith({String? id, String? name, int? quantity}) {
+  //   return Product(
+  //     category: Categoires.empty(),
+  //     categoryId: '',
+  //     description: '',
+  //     price: 0,
+  //     user: ,
+  //     id: id ?? this.id,
+  //     name: name ?? this.name,
+  //     quantity: quantity ?? this.quantity,
+  //   );
+  // }
 }

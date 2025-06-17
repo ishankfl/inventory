@@ -45,7 +45,7 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
   List<String> get _labels => [
         'Products',
         'Categories',
-        'Departments',
+        'Department',
         isExpired ? 'Login' : 'Issue',
       ];
 
@@ -146,11 +146,12 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
         ),
       ),
       body: _pages[_currentIndex],
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionButton.small(
         backgroundColor: const Color(0xFF007bff),
         foregroundColor: theme.colorScheme.onPrimary,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30),
+          side: BorderSide(width: 60),
+          borderRadius: BorderRadius.circular(50),
         ),
         onPressed: () {
           // Handle FAB press

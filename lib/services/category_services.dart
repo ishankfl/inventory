@@ -154,7 +154,13 @@ class CategoiresService {
           'description': category.description,
         }),
       );
-
+      print(response.statusCode);
+      if(response.statusCode == 401){
+         return {
+          'success': false,
+          'message': "You are not authorized to perform this action." ?? 'Failed to update Category.'
+        };
+      }
       final resBody = jsonDecode(response.body);
       if (response.statusCode == 200) {
         return {'success': true, 'message': 'Category updated successfully.'};
