@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:inventory/models/category.dart';
+import 'package:inventory/screens/common/snack_bar.dart';
 import 'package:inventory/services/category_services.dart';
 import 'package:inventory/services/product_services.dart';
 import 'package:inventory/utils/token_utils.dart';
@@ -59,9 +60,8 @@ class _AddProductPageState extends State<AddProductPage> {
       );
 
       if (response.statusCode == 201 || response.statusCode == 200) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Product added successfully")),
-        );
+        AppSnackBar.showSuccess(context, "Product added successfully");
+
         _formKey.currentState!.reset();
         setState(() {
           selectedCategoryId = null;
@@ -72,11 +72,14 @@ class _AddProductPageState extends State<AddProductPage> {
         setState(() {
           error = "Failed to add product: ${response.body}";
         });
+        AppSnackBar.showError(
+            context, "Failed to add product: ${response.body}");
       }
     } catch (e) {
       setState(() {
         error = "Error occurred: $e";
       });
+      AppSnackBar.showError(context, "Error occurred: $e");
     }
   }
 

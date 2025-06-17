@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:inventory/models/product.dart';
+import 'package:inventory/screens/common/snack_bar.dart';
 import 'package:inventory/services/product_services.dart';
 import 'package:inventory/utils/token_utils.dart';
 
@@ -53,10 +54,7 @@ class _EditProductPageState extends State<EditProductPage> {
     if (isExpired) {
       setState(() => isSaving = false);
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-              content: Text("Please Login First with admin account")),
-        );
+        AppSnackBar.showError(context, "Please Login First with admin account");
       }
       return;
     }
@@ -86,16 +84,13 @@ class _EditProductPageState extends State<EditProductPage> {
       );
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Product updated successfully!')),
-        );
+        AppSnackBar.showSuccess(context, 'Product updated successfully!');
+
         // Navigator.pop(context, updatedProduct); // Pass updated product back
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to update product: $e')),
-        );
+        AppSnackBar.showError(context, 'Failed to update product: $e');
       }
     } finally {
       if (mounted) setState(() => isSaving = false);
